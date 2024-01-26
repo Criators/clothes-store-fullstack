@@ -18,7 +18,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\clothes.store.client\clothes.store.client.esproj">
+    <ProjectReference Include="..\clothes.store.client\Clothes.Store.Client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>
