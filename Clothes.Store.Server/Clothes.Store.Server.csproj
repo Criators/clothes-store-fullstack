@@ -29,7 +29,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\clothes.store.client\Clothes.Store.Client.esproj">
+    <ProjectReference Include="..\clothes.store.client\clothes.store.client.esproj">
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\Clothes.Store.Domain\Clothes.Store.Domain.csproj" />

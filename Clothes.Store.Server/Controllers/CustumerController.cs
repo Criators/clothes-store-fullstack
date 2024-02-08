@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
-namespace Clothes.Store.API.Controllers
+namespace Clothes.Store.Server.Controllers
 {
     [Route("api/custumer")]
     [ApiController]
