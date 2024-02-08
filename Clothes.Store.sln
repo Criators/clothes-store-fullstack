@@ -4,12 +4,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.8.34330.188
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clothes.Store.API", "Clothes.Store.Server\Clothes.Store.API.csproj", "{D39D4D95-6189-4C9C-B3BC-BE8B3743A027}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FAFD776F-336A-4D23-812B-05FCBFDAC4FC} = {FAFD776F-336A-4D23-812B-05FCBFDAC4FC}
+	EndProjectSection
 EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "Clothes.Store.Client", "clothes.store.client\Clothes.Store.Client.esproj", "{F335C6D9-A3D9-4A0C-A8E9-1D96A8D2C9CF}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clothes.Store.Consumer", "Clothes.Store.Consumer\Clothes.Store.Consumer.csproj", "{BB0722BB-159F-4D37-B6A3-B14D91D14D24}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clothes.Store.Repository", "Clothes.Store.Repository\Clothes.Store.Repository.csproj", "{69F82F7B-5980-469E-832B-7BCD71FD3506}"
+	ProjectSection(ProjectDependencies) = postProject
+		{96838EB5-4F04-48E2-8B7A-36458DAEDD77} = {96838EB5-4F04-48E2-8B7A-36458DAEDD77}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clothes.Store.Domain", "Clothes.Store.Domain\Clothes.Store.Domain.csproj", "{96838EB5-4F04-48E2-8B7A-36458DAEDD77}"
 EndProject

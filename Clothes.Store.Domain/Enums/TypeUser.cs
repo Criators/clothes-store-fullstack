@@ -6,12 +6,9 @@ using System.Threading.Tasks;
 
 namespace Clothes.Store.Domain.Enums
 {
-    public enum Payment
+    public enum TypeUser
     {
-        CreditCard = 1,
-        DebitCard = 2,
-        Pix = 3,
-        Paypal = 4,
-        BankSlip = 5
+        Admin = 1,
+        Custumer = 2
     }
 }
