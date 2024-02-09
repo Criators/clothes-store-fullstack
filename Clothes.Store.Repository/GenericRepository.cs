@@ -10,13 +10,13 @@ using System.Threading.Tasks;
 namespace Clothes.Store.Repository
 {
     public class GenericRepository<T> : IGeneric<T> where T : class
-    {            
-        //private readonly DBContext _context;
+    {
+        private readonly DatabaseContext _context;
 
-        //public GenericRepository(DBContext context)
-        //{
-        //    _context = context;
-        //}
+        public GenericRepository(DatabaseContext context)
+        {
+            _context = context;
+        }
 
         public Task Add(T entity)
         {
