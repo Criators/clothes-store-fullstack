@@ -1,3 +1,4 @@
+using Clothes.Store.Domain.Models;
 using Clothes.Store.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
@@ -9,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 var connection = builder.Configuration.GetConnectionString("ClothesStore");
 builder.Services.AddDbContext<DatabaseContext>(o => o.UseSqlServer(connection, b => b.MigrationsAssembly("Clothes.Store.Server")));
 // builder.Services.AddDbContext<DBContext>(o => o.UseInMemoryDatabase("ClothesStore"));
+
+builder.Services.AddAutoMapper(typeof(CustumerProfile).Assembly);
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

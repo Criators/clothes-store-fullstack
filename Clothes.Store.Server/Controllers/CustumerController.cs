@@ -1,4 +1,7 @@
-﻿using Clothes.Store.Domain.Entities;
+﻿using AutoMapper;
+using Clothes.Store.Domain.Entities;
+using Clothes.Store.Domain.Models.InputModel;
+using Clothes.Store.Domain.Models.ViewModel;
 using Clothes.Store.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -11,10 +14,12 @@ namespace Clothes.Store.Server.Controllers
     public class CustumerController : ControllerBase
     {
         private readonly DatabaseContext _context;
+        private readonly IMapper _mapper;
 
-        public CustumerController(DatabaseContext context)
+        public CustumerController(DatabaseContext context, IMapper mapper)
         {
             _context = context;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -27,8 +32,9 @@ namespace Clothes.Store.Server.Controllers
         public IActionResult GetAll()
         {
             var custumers = _context.Custumer.Where(d => d.IsActivate).ToList();
+            var viewModel = _mapper.Map<List<CustumerViewModel>>(custumers);
 
-            return Ok(custumers);
+            return Ok(viewModel);
         }
 
         /// <summary>
@@ -50,22 +56,26 @@ namespace Clothes.Store.Server.Controllers
                 return NotFound();
             }
 
-            return Ok(custumer);
+            var viewModel = _mapper.Map<CustumerViewModel>(custumer);
+
+            return Ok(viewModel);
         }
 
         /// <summary>
         /// Register custumer
         /// </summary>
         /// <remarks>
-        /// {"custumerName": "string", "email": "string", "cpf": "string", "password": "string", "criationDateHour": "NOW", "typeUser": 1}
+        /// {"custumerName": "string", "email": "string", "cpf": "string", "password": "string", "typeUser": 1}
         /// </remarks>
-        /// <param name="custumer">Data of Custumer</param>
+        /// <param name="input">Data of Custumer</param>
         /// <returns>Created Object</returns>
         /// <response code="201">Success</response> 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public IActionResult Post(Custumer custumer)
+        public IActionResult Post(CustumerInputModel input)
         {
+            var custumer = _mapper.Map<Custumer>(input);
+
             _context.Custumer.Add(custumer);
             _context.SaveChanges();
 
@@ -76,7 +86,7 @@ namespace Clothes.Store.Server.Controllers
         /// Update a custumer
         /// </summary>
         /// <remarks>
-        /// {"custumerName": "string", "email": "string", "cpf": "string", "password": "string", "criationDateHour": "NOW", "typeUser": 1}
+        /// {"custumerName": "string", "email": "string", "cpf": "string", "password": "string", "typeUser": 1}
         /// </remarks>
         /// <param name="id">Identifier of Custumer</param>
         /// <param name="input">Data of Custumer</param>
@@ -86,7 +96,7 @@ namespace Clothes.Store.Server.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Update(Guid id, Custumer input)
+        public IActionResult Update(Guid id, CustumerInputModel input)
         {
             var custumer = _context.Custumer.SingleOrDefault(d => d.CustumerID == id);
 
@@ -95,7 +105,7 @@ namespace Clothes.Store.Server.Controllers
                 return NotFound();
             }
 
-            custumer.Update(input.CustumerName, input.Email, input.CPF, input.Password, input.CriationDateHour, input.TypeUser);
+            custumer.Update(input.CustumerName, input.Email, input.CPF, input.Password, input.TypeUser);
 
             _context.Custumer.Update(custumer);
             _context.SaveChanges();

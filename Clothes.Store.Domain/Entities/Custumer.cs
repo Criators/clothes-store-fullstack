@@ -14,6 +14,7 @@ namespace Clothes.Store.Domain.Entities
         public Custumer() 
         {
             IsActivate = true;
+            CriationDateHour = DateTime.Now;
         }
 
         public Guid CustumerID { get; set; }
@@ -32,13 +33,12 @@ namespace Clothes.Store.Domain.Entities
 
         public bool IsActivate { get; set; }
 
-        public void Update(string custumerName, string email, string cpf, string password, DateTime criationDateHour, TypeUser? typeUser)
+        public void Update(string custumerName, string email, string cpf, string password, TypeUser? typeUser)
         {
             CustumerName = custumerName;
             Email = email;
             CPF = cpf;
             Password = password;
-            CriationDateHour = criationDateHour;
             TypeUser = typeUser;
         }
 
