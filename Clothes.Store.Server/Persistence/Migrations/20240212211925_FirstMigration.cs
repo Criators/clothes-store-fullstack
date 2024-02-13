@@ -21,7 +21,7 @@ namespace Clothes.Store.Server.Persistence.Migrations
                     CPF = table.Column<string>(type: "varchar(14)", maxLength: 14, nullable: false),
                     Password = table.Column<string>(type: "varchar(16)", maxLength: 16, nullable: false),
                     CriationDateHour = table.Column<DateTime>(type: "DATETIME", nullable: false),
-                    TypeUser = table.Column<int>(type: "INT", nullable: false),
+                    UserType = table.Column<int>(type: "INT", nullable: false),
                     IsActivate = table.Column<bool>(type: "BIT", nullable: false)
                 },
                 constraints: table =>

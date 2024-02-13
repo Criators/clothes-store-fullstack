@@ -19,6 +19,6 @@ namespace Clothes.Store.Domain.Models.ViewModel
 
         public string Password { get; set; }
 
-        public TypeUser? TypeUser { get; set; }
+        public UserType? UserType { get; set; }
     }
 }

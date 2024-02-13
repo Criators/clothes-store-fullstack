@@ -29,17 +29,17 @@ namespace Clothes.Store.Domain.Entities
 
         public DateTime CriationDateHour { get; set; }
 
-        public TypeUser? TypeUser { get; set; }
+        public UserType? UserType { get; set; }
 
         public bool IsActivate { get; set; }
 
-        public void Update(string custumerName, string email, string cpf, string password, TypeUser? typeUser)
+        public void Update(string custumerName, string email, string cpf, string password, UserType? userType)
         {
             CustumerName = custumerName;
             Email = email;
             CPF = cpf;
             Password = password;
-            TypeUser = typeUser;
+            UserType = userType;
         }
 
         public void Delete()

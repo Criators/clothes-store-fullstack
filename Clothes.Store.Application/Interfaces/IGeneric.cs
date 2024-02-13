@@ -11,7 +11,7 @@ namespace Clothes.Store.Application.Interfaces
     {
         Task Add(T entity);
         Task Update(T entity);
-        Task Delete(bool IsActivate);
+        Task Delete(T entity);
         Task<T> GetById(Guid id);
         Task<List<T>> GetAll();
     }

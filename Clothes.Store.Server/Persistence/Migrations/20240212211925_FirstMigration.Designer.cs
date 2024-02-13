@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clothes.Store.Server.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240209173307_FirstMigration")]
+    [Migration("20240212211925_FirstMigration")]
     partial class FirstMigration
     {
         /// <inheritdoc />
@@ -57,7 +57,7 @@ namespace Clothes.Store.Server.Persistence.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("varchar(16)");
 
-                    b.Property<int>("TypeUser")
+                    b.Property<int>("UserType")
                         .HasColumnType("INT");
 
                     b.HasKey("CustumerID");

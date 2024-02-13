@@ -65,7 +65,7 @@ namespace Clothes.Store.Server.Controllers
         /// Register custumer
         /// </summary>
         /// <remarks>
-        /// {"custumerName": "string", "email": "string", "cpf": "string", "password": "string", "typeUser": 1}
+        /// {"custumerName": "string", "email": "string", "cpf": "string", "password": "string", "usertype": 1}
         /// </remarks>
         /// <param name="input">Data of Custumer</param>
         /// <returns>Created Object</returns>
@@ -86,7 +86,7 @@ namespace Clothes.Store.Server.Controllers
         /// Update a custumer
         /// </summary>
         /// <remarks>
-        /// {"custumerName": "string", "email": "string", "cpf": "string", "password": "string", "typeUser": 1}
+        /// {"custumerName": "string", "email": "string", "cpf": "string", "password": "string", "usertype": 1}
         /// </remarks>
         /// <param name="id">Identifier of Custumer</param>
         /// <param name="input">Data of Custumer</param>
@@ -105,7 +105,7 @@ namespace Clothes.Store.Server.Controllers
                 return NotFound();
             }
 
-            custumer.Update(input.CustumerName, input.Email, input.CPF, input.Password, input.TypeUser);
+            custumer.Update(input.CustumerName, input.Email, input.CPF, input.Password, input.UserType);
 
             _context.Custumer.Update(custumer);
             _context.SaveChanges();

@@ -54,7 +54,7 @@ namespace Clothes.Store.Server.Persistence.Migrations
                         .HasMaxLength(16)
                         .HasColumnType("varchar(16)");
 
-                    b.Property<int>("TypeUser")
+                    b.Property<int>("UserType")
                         .HasColumnType("INT");
 
                     b.HasKey("CustumerID");

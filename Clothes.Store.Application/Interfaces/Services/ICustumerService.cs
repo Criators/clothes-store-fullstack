@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clothes.Store.Domain.Enums
+namespace Clothes.Store.Application.Interfaces.Services
 {
-    public enum TypeUser
+    public interface ICustumerService
     {
-        Admin = 1,
-        Custumer = 2
     }
 }

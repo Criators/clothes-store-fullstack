@@ -41,7 +41,7 @@ namespace Clothes.Store.Repository
                 .IsRequired()
                 .HasColumnType("DATETIME");
 
-                e.Property(c => c.TypeUser)
+                e.Property(c => c.UserType)
                 .IsRequired()
                 .HasColumnType("INT");
 
