@@ -17,6 +17,8 @@ namespace Clothes.Store.Domain.Models
             CreateMap<Custumer, CustumerViewModel>();
 
             CreateMap<CustumerInputModel, Custumer>();
+
+            CreateMap<AuthenticationInputModel, Custumer>();
         }
     }
 }

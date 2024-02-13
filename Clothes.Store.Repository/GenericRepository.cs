@@ -9,7 +9,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clothes.Store.Repository.Repository
+namespace Clothes.Store.Repository
 {
     public class GenericRepository<T> : IGeneric<T>, IDisposable where T : class
     {

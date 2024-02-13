@@ -1,10 +1,14 @@
 using Clothes.Store.Application.Interfaces;
+using Clothes.Store.Application.Interfaces.Services;
 using Clothes.Store.Domain.Models;
 using Clothes.Store.Domain.Validators.Custumer;
 using Clothes.Store.Repository;
 using Clothes.Store.Repository.Repository;
+using Clothes.Store.Repository.Services;
 using FluentValidation.AspNetCore;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 //using Microsoft.EntityFrameworkCore;
 
@@ -17,13 +21,17 @@ builder.Services.AddDbContext<DatabaseContext>(o => o.UseSqlServer(connection, b
 // builder.Services.AddDbContext<DBContext>(o => o.UseInMemoryDatabase("ClothesStore"));
 #endregion
 
-#region Managemente objects
+#region Management objects
 builder.Services.AddAutoMapper(typeof(CustumerProfile).Assembly);
 #endregion
 
 #region Interface and Repository
 builder.Services.AddSingleton(typeof(IGeneric<>), typeof(GenericRepository<>));
 builder.Services.AddSingleton<ICustumer, CustumerRepository>();
+#endregion
+
+#region Services
+builder.Services.AddSingleton<ICustumerService, CustumerService>();
 #endregion
 
 builder.Services.AddControllers()
@@ -64,6 +72,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
