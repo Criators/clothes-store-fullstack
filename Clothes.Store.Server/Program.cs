@@ -1,13 +1,14 @@
 using Clothes.Store.Application.Interfaces;
 using Clothes.Store.Application.Interfaces.Services;
-using Clothes.Store.Domain.Models;
-using Clothes.Store.Domain.Validators.Custumer;
+using Clothes.Store.Application.Models;
+using Clothes.Store.Application.Validators.Custumer;
 using Clothes.Store.Repository;
 using Clothes.Store.Repository.Repository;
 using Clothes.Store.Repository.Services;
 using FluentValidation.AspNetCore;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 //using Microsoft.EntityFrameworkCore;
@@ -17,7 +18,11 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 #region DbContext
 var connection = builder.Configuration.GetConnectionString("ClothesStore");
-builder.Services.AddDbContext<DatabaseContext>(o => o.UseSqlServer(connection, b => b.MigrationsAssembly("Clothes.Store.Server")));
+builder.Services.AddDbContext<DatabaseContext>(o => o.UseSqlServer(
+    connection, 
+    b => b.MigrationsAssembly("Clothes.Store.Server")
+    ));
+
 // builder.Services.AddDbContext<DBContext>(o => o.UseInMemoryDatabase("ClothesStore"));
 #endregion
 
@@ -27,11 +32,12 @@ builder.Services.AddAutoMapper(typeof(CustumerProfile).Assembly);
 
 #region Interface and Repository
 builder.Services.AddSingleton(typeof(IGeneric<>), typeof(GenericRepository<>));
-builder.Services.AddSingleton<ICustumer, CustumerRepository>();
+builder.Services.AddScoped<ICustumer, CustumerRepository>();
 #endregion
 
 #region Services
-builder.Services.AddSingleton<ICustumerService, CustumerService>();
+builder.Services.AddScoped<ICustumerService, CustumerService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
 #endregion
 
 builder.Services.AddControllers()

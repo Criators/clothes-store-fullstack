@@ -13,54 +13,46 @@ namespace Clothes.Store.Repository
 {
     public class GenericRepository<T> : IGeneric<T>, IDisposable where T : class
     {
-        private readonly DbContextOptions<DatabaseContext> optionsBuilder;
+        private readonly DbContext _context;
+        private readonly DbSet<T> _dbSet;
 
-        public GenericRepository()
+        public GenericRepository(DbContext context)
         {
-            optionsBuilder = new DbContextOptions<DatabaseContext>();
+            _context = context ?? throw new ArgumentNullException(nameof(context));
+            _dbSet = _context.Set<T>();
+        }
+
+        protected DbContext GetContext()
+        {
+            return _context;
         }
 
         public async Task Add(T entity)
         {
-            using (var data = new DatabaseContext(optionsBuilder))
-            {
-                await data.Set<T>().AddAsync(entity);
-                await data.SaveChangesAsync();
-            }
+            await _context.Set<T>().AddAsync(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task Delete(T entity)
         {
-            using (var data = new DatabaseContext(optionsBuilder))
-            {
-                data.Set<T>().Remove(entity);
-                await data.SaveChangesAsync();
-            }
+            _context.Set<T>().Remove(entity);
+            await _context.SaveChangesAsync();
         }
 
         public async Task<List<T>> GetAll()
         {
-            using (var data = new DatabaseContext(optionsBuilder))
-            {
-                return await data.Set<T>().ToListAsync();
-            }
+            return await _context.Set<T>().ToListAsync();
         }
 
         public async Task<T> GetById(Guid id)
         {
-            using (var data = new DatabaseContext(optionsBuilder))
-            {
-                return await data.Set<T>().FindAsync(id);
-            }
+            return await _context.Set<T>().FindAsync(id);
         }
 
         public async Task Update(T entity)
         {
-            using (var data = new DatabaseContext(optionsBuilder))
-            {
-                data.Set<T>().Update(entity);
-                await data.SaveChangesAsync();
-            }
+            _context.Set<T>().Update(entity);
+            await _context.SaveChangesAsync();
         }
 
         #region Disposed https://docs.microsoft.com/pt-br/dotnet/standard/garbage-collection/implementing-dispose

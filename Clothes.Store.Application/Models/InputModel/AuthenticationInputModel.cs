@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clothes.Store.Domain.Models.InputModel
+namespace Clothes.Store.Application.Models.InputModel
 {
     public class AuthenticationInputModel
     {

@@ -1,4 +1,6 @@
-﻿using Microsoft.IdentityModel.Tokens;
+﻿using Clothes.Store.Domain.Entities;
+using Clothes.Store.Application.Models.InputModel;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -6,7 +8,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
-namespace Clothes.Store.Domain
+namespace Clothes.Store.Application
 {
     public static class Extensions
     {
@@ -65,6 +67,17 @@ namespace Clothes.Store.Domain
             }
 
             return false;
+        }
+
+        public static bool ComparePassword(string password, string confirmedPassword)
+        {
+            return password.Equals(confirmedPassword);
+        }
+
+        public static string EncryptPassword(string password)
+        {
+            var passwordHash = BCrypt.Net.BCrypt.HashPassword(password);
+            return passwordHash;
         }
     }
 }

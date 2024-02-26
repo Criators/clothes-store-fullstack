@@ -1,5 +1,4 @@
-﻿using Clothes.Store.Domain.Entities;
-using Clothes.Store.Application.Models.InputModel;
+﻿using Clothes.Store.Application.Models.InputModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -8,8 +7,8 @@ using System.Threading.Tasks;
 
 namespace Clothes.Store.Application.Interfaces.Services
 {
-    public interface ICustumerService
+    public interface ITokenService
     {
-        Task<Custumer> SaveCustumer(Custumer input);
+        public Task<string> GenerateToken(AuthenticationInputModel input);
     }
 }

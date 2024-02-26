@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Clothes.Store.Application.Interfaces;
+using Clothes.Store.Application.Interfaces.Services;
 using Clothes.Store.Domain.Entities;
-using Clothes.Store.Domain.Models.InputModel;
-using Clothes.Store.Domain.Models.ViewModel;
+using Clothes.Store.Application.Models.InputModel;
+using Clothes.Store.Application.Models.ViewModel;
 using Clothes.Store.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -16,10 +18,16 @@ namespace Clothes.Store.Server.Controllers
         private readonly DatabaseContext _context;
         private readonly IMapper _mapper;
 
-        public CustumerController(DatabaseContext context, IMapper mapper)
+        private readonly ICustumerService _custumerService;
+        private readonly ICustumer _custumer;
+
+        public CustumerController(DatabaseContext context, IMapper mapper, ICustumerService custumerService, ICustumer  custumer)
         {
             _context = context;
             _mapper = mapper;
+
+            _custumerService = custumerService;
+            _custumer = custumer;
         }
 
         /// <summary>
@@ -65,21 +73,21 @@ namespace Clothes.Store.Server.Controllers
         /// Register custumer
         /// </summary>
         /// <remarks>
-        /// {"custumerName": "string", "email": "string", "cpf": "string", "password": "string", "usertype": 1}
+        /// {"custumerName": "string", "email": "string", "cpf": "string", "password": "string", confirmedPassword: "string", "usertype": 1}
         /// </remarks>
         /// <param name="input">Data of Custumer</param>
         /// <returns>Created Object</returns>
         /// <response code="201">Success</response> 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public IActionResult Post(CustumerInputModel input)
+        public async Task<IActionResult> Post(CustumerInputModel input)
         {
             var custumer = _mapper.Map<Custumer>(input);
+            var savedCustumer = await _custumerService.SaveCustumer(custumer);
 
-            _context.Custumer.Add(custumer);
-            _context.SaveChanges();
+            var viewModel = _mapper.Map<CustumerViewModel>(savedCustumer);
 
-            return CreatedAtAction(nameof(GetById), new { id = custumer.CustumerID }, custumer);
+            return CreatedAtAction(nameof(GetById), new { id = viewModel.CustumerID }, viewModel);
         }
 
         /// <summary>

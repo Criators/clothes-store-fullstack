@@ -4,6 +4,7 @@ using Clothes.Store.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clothes.Store.Server.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240220205456_AlterPasswordFieldLenght")]
+    partial class AlterPasswordFieldLenght
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -34,9 +37,7 @@ namespace Clothes.Store.Server.Persistence.Migrations
                         .HasColumnType("varchar(14)");
 
                     b.Property<DateTime>("CriationDateHour")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("DATETIME")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
+                        .HasColumnType("DATETIME");
 
                     b.Property<string>("CustumerName")
                         .IsRequired()
@@ -49,14 +50,12 @@ namespace Clothes.Store.Server.Persistence.Migrations
                         .HasColumnType("varchar(100)");
 
                     b.Property<bool>("IsActivate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("BIT")
-                        .HasDefaultValue(false);
+                        .HasColumnType("BIT");
 
                     b.Property<string>("Password")
                         .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("varchar(100)");
+                        .HasMaxLength(16)
+                        .HasColumnType("varchar(16)");
 
                     b.Property<int>("UserType")
                         .HasColumnType("INT");

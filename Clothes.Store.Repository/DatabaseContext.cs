@@ -34,12 +34,13 @@ namespace Clothes.Store.Repository
 
                 e.Property(c => c.Password)
                 .IsRequired()
-                .HasColumnType("varchar(16)")
-                .HasMaxLength(16);
+                .HasColumnType("varchar(100)")
+                .HasMaxLength(100);
 
                 e.Property(c => c.CriationDateHour)
                 .IsRequired()
-                .HasColumnType("DATETIME");
+                .HasColumnType("DATETIME")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
                 e.Property(c => c.UserType)
                 .IsRequired()
@@ -47,7 +48,8 @@ namespace Clothes.Store.Repository
 
                 e.Property(c => c.IsActivate)
                 .IsRequired()
-                .HasColumnType("BIT");
+                .HasColumnType("BIT")
+                .HasDefaultValue(0);
             });
         }
     }
