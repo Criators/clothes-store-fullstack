@@ -20,14 +20,20 @@ namespace Clothes.Store.Server.Controllers
 
         private readonly ICustumerService _custumerService;
         private readonly ICustumer _custumer;
+        private readonly ILogger<CustumerController> _logger;
 
-        public CustumerController(DatabaseContext context, IMapper mapper, ICustumerService custumerService, ICustumer  custumer)
+        public CustumerController(DatabaseContext context, 
+                                  IMapper mapper, 
+                                  ICustumerService custumerService, 
+                                  ICustumer  custumer,
+                                  ILogger<CustumerController> logger)
         {
             _context = context;
             _mapper = mapper;
 
             _custumerService = custumerService;
             _custumer = custumer;
+            _logger = logger;
         }
 
         /// <summary>
@@ -145,6 +151,21 @@ namespace Clothes.Store.Server.Controllers
             _context.SaveChanges();
 
             return NoContent();
+        }
+
+        [HttpPost]
+        [ProducesResponseType(StatusCodes.Status201Created)]
+        public async Task<IActionResult> LogTest(int num)
+        {
+            try
+            {
+                int result = num /  10;
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex, "Erro durante o processamento");
+            }
+
+            return Ok();
         }
     }
 }

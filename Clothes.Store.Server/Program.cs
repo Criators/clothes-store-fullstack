@@ -11,6 +11,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using NLog.Extensions.Logging;
+using NLog.Web;
 //using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,11 +35,18 @@ builder.Services.AddAutoMapper(typeof(CustumerProfile).Assembly);
 #region Interface and Repository
 builder.Services.AddSingleton(typeof(IGeneric<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ICustumer, CustumerRepository>();
+builder.Services.AddScoped<ILog, LogRepository>();
 #endregion
 
 #region Services
 builder.Services.AddScoped<ICustumerService, CustumerService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<ILogServices, LogServices>();
+#endregion
+
+#region NLog
+builder.Logging.ClearProviders();
+builder.Host.UseNLog();
 #endregion
 
 builder.Services.AddControllers()
@@ -72,6 +81,7 @@ app.UseStaticFiles();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseExceptionHandler("/Error");
     app.UseSwagger();
     app.UseSwaggerUI();
 }

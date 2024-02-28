@@ -10,46 +10,72 @@ namespace Clothes.Store.Repository
         public DatabaseContext(DbContextOptions options) : base(options) { }
 
         public DbSet<Custumer> Custumer { get; set; }
+        public DbSet<Log> Log { get; set; }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
-            builder.Entity<Custumer>(e =>
+            builder.Entity<Custumer>(c =>
             {
-                e.HasKey(c => c.CustumerID);
+                c.HasKey(ci => ci.CustumerID);
 
-                e.Property(c => c.CustumerName)
+                c.Property(cn => cn.CustumerName)
                 .IsRequired()
                 .HasColumnType("varchar(100)")
                 .HasMaxLength(100);
 
-                e.Property(c => c.Email)
+                c.Property(e => e.Email)
                 .IsRequired()
                 .HasColumnType("varchar(100)")
                 .HasMaxLength(100);
 
-                e.Property(c => c.CPF)
+                c.Property(c => c.CPF)
                 .IsRequired()
                 .HasColumnType("varchar(14)")
                 .HasMaxLength(14);
 
-                e.Property(c => c.Password)
+                c.Property(p => p.Password)
                 .IsRequired()
                 .HasColumnType("varchar(100)")
                 .HasMaxLength(100);
 
-                e.Property(c => c.CriationDateHour)
+                c.Property(cdh => cdh.CriationDateHour)
                 .IsRequired()
                 .HasColumnType("DATETIME")
                 .HasDefaultValueSql("CURRENT_TIMESTAMP");
 
-                e.Property(c => c.UserType)
+                c.Property(u => u.UserType)
                 .IsRequired()
                 .HasColumnType("INT");
 
-                e.Property(c => c.IsActivate)
+                c.Property(a => a.IsActivate)
                 .IsRequired()
                 .HasColumnType("BIT")
                 .HasDefaultValue(0);
+            });
+
+            builder.Entity<Log>(l =>
+            {
+                l.HasKey(li => li.LogID);
+
+                l.Property(ll => ll.LogLevel)
+                .IsRequired()
+                .HasColumnType("varchar(50)")
+                .HasMaxLength(50);
+
+                l.Property(m => m.Message)
+                .IsRequired()
+                .HasColumnType("nvarchar(max)")
+                .HasMaxLength(100);
+
+                l.Property(e => e.Exception)
+                .IsRequired()
+                .HasColumnType("nvarchar(max)")
+                .HasMaxLength(100);
+
+                l.Property(ld => ld.LogDate)
+                .IsRequired()
+                .HasColumnType("DATETIME")
+                .HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
         }
     }
