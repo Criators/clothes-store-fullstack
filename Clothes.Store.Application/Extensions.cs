@@ -1,12 +1,5 @@
-﻿using Clothes.Store.Domain.Entities;
-using Clothes.Store.Application.Models.InputModel;
-using Microsoft.IdentityModel.Tokens;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.IdentityModel.Tokens;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 
 namespace Clothes.Store.Application
 {

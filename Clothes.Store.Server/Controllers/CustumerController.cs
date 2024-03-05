@@ -8,6 +8,7 @@ using Clothes.Store.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Clothes.Store.Server.Controllers
 {
@@ -22,10 +23,10 @@ namespace Clothes.Store.Server.Controllers
         private readonly ICustumer _custumer;
         private readonly ILogger<CustumerController> _logger;
 
-        public CustumerController(DatabaseContext context, 
-                                  IMapper mapper, 
-                                  ICustumerService custumerService, 
-                                  ICustumer  custumer,
+        public CustumerController(DatabaseContext context,
+                                  IMapper mapper,
+                                  ICustumerService custumerService,
+                                  ICustumer custumer,
                                   ILogger<CustumerController> logger)
         {
             _context = context;
@@ -63,16 +64,26 @@ namespace Clothes.Store.Server.Controllers
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public IActionResult GetById(Guid id)
         {
-            var custumer = _context.Custumer.SingleOrDefault(d => d.CustumerID == id);
+            var viewModel = new CustumerViewModel();
 
-            if (custumer == null)
+            try
             {
-                return NotFound();
+                var custumer = _context.Custumer.SingleOrDefault(d => d.CustumerID == id);
+
+                if (custumer == null)
+                {
+                    return NotFound();
+                }
+
+                viewModel = _mapper.Map<CustumerViewModel>(custumer);
+
+                return Ok(viewModel);
             }
-
-            var viewModel = _mapper.Map<CustumerViewModel>(custumer);
-
-            return Ok(viewModel);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while get data. (GetByIdCustumerMethod)");
+                return StatusCode(500, "Server internal error!");
+            }
         }
 
         /// <summary>
@@ -89,11 +100,19 @@ namespace Clothes.Store.Server.Controllers
         public async Task<IActionResult> Post(CustumerInputModel input)
         {
             var custumer = _mapper.Map<Custumer>(input);
-            var savedCustumer = await _custumerService.SaveCustumer(custumer);
 
-            var viewModel = _mapper.Map<CustumerViewModel>(savedCustumer);
+            try
+            {
+                var savedCustumer = await _custumerService.SaveCustumer(custumer);
 
-            return CreatedAtAction(nameof(GetById), new { id = viewModel.CustumerID }, viewModel);
+                var viewModel = _mapper.Map<CustumerViewModel>(savedCustumer);
+
+                return CreatedAtAction(nameof(GetById), new { id = viewModel.CustumerID }, viewModel);
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while recording. (PostCustumerMethod)");
+                return StatusCode(500, "Server internal error!");
+            }
         }
 
         /// <summary>
@@ -151,21 +170,6 @@ namespace Clothes.Store.Server.Controllers
             _context.SaveChanges();
 
             return NoContent();
-        }
-
-        [HttpPost]
-        [ProducesResponseType(StatusCodes.Status201Created)]
-        public async Task<IActionResult> LogTest(int num)
-        {
-            try
-            {
-                int result = num /  10;
-            } catch (Exception ex)
-            {
-                _logger.LogError(ex, "Erro durante o processamento");
-            }
-
-            return Ok();
         }
     }
 }

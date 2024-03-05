@@ -6,13 +6,10 @@ using Clothes.Store.Repository;
 using Clothes.Store.Repository.Repository;
 using Clothes.Store.Repository.Services;
 using FluentValidation.AspNetCore;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.OpenApi.Models;
-using NLog.Extensions.Logging;
-using NLog.Web;
+using Serilog;
 //using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -21,7 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 #region DbContext
 var connection = builder.Configuration.GetConnectionString("ClothesStore");
 builder.Services.AddDbContext<DatabaseContext>(o => o.UseSqlServer(
-    connection, 
+    connection,
     b => b.MigrationsAssembly("Clothes.Store.Server")
     ));
 
@@ -35,18 +32,20 @@ builder.Services.AddAutoMapper(typeof(CustumerProfile).Assembly);
 #region Interface and Repository
 builder.Services.AddSingleton(typeof(IGeneric<>), typeof(GenericRepository<>));
 builder.Services.AddScoped<ICustumer, CustumerRepository>();
-builder.Services.AddScoped<ILog, LogRepository>();
 #endregion
 
 #region Services
 builder.Services.AddScoped<ICustumerService, CustumerService>();
 builder.Services.AddScoped<ITokenService, TokenService>();
-builder.Services.AddScoped<ILogServices, LogServices>();
 #endregion
 
-#region NLog
-builder.Logging.ClearProviders();
-builder.Host.UseNLog();
+#region Serilog
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom
+    .Configuration(builder.Configuration)
+    .CreateLogger();
+
+builder.Host.UseSerilog();
 #endregion
 
 builder.Services.AddControllers()

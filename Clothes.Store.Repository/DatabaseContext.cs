@@ -52,31 +52,6 @@ namespace Clothes.Store.Repository
                 .HasColumnType("BIT")
                 .HasDefaultValue(0);
             });
-
-            builder.Entity<Log>(l =>
-            {
-                l.HasKey(li => li.LogID);
-
-                l.Property(ll => ll.LogLevel)
-                .IsRequired()
-                .HasColumnType("varchar(50)")
-                .HasMaxLength(50);
-
-                l.Property(m => m.Message)
-                .IsRequired()
-                .HasColumnType("nvarchar(max)")
-                .HasMaxLength(100);
-
-                l.Property(e => e.Exception)
-                .IsRequired()
-                .HasColumnType("nvarchar(max)")
-                .HasMaxLength(100);
-
-                l.Property(ld => ld.LogDate)
-                .IsRequired()
-                .HasColumnType("DATETIME")
-                .HasDefaultValueSql("CURRENT_TIMESTAMP");
-            });
         }
     }
 }

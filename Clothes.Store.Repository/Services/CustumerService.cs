@@ -15,12 +15,10 @@ namespace Clothes.Store.Repository.Services
     public class CustumerService : ICustumerService
     {
         private readonly ICustumer _iCustumer;
-        private readonly IMapper _mapper;
 
-        public CustumerService(ICustumer iCustumer, IMapper mapper)
+        public CustumerService(ICustumer iCustumer)
         {
             _iCustumer = iCustumer;
-            _mapper = mapper;
         }
 
         public async Task<Custumer> SaveCustumer(Custumer custumer)
