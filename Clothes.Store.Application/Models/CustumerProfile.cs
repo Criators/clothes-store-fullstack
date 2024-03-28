@@ -1,14 +1,14 @@
 ﻿using AutoMapper;
 using Clothes.Store.Domain.Entities;
-using Clothes.Store.Domain.Models.InputModel;
-using Clothes.Store.Domain.Models.ViewModel;
+using Clothes.Store.Application.Models.InputModel;
+using Clothes.Store.Application.Models.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clothes.Store.Domain.Models
+namespace Clothes.Store.Application.Models
 {
     public class CustumerProfile : Profile
     {
@@ -17,6 +17,10 @@ namespace Clothes.Store.Domain.Models
             CreateMap<Custumer, CustumerViewModel>();
 
             CreateMap<CustumerInputModel, Custumer>();
+
+            CreateMap<UpdateCustumerInputModel, Custumer>();
+
+            CreateMap<AuthenticationInputModel, Custumer>();
         }
     }
 }

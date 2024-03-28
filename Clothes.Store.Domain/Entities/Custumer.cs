@@ -11,12 +11,6 @@ namespace Clothes.Store.Domain.Entities
 {
     public class Custumer
     {
-        public Custumer() 
-        {
-            IsActivate = true;
-            CriationDateHour = DateTime.Now;
-        }
-
         public Guid CustumerID { get; set; }
 
         public string CustumerName { get; set; }
