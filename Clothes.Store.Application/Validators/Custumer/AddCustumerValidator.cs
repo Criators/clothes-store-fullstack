@@ -1,4 +1,5 @@
-﻿using Clothes.Store.Domain.Models.InputModel;
+﻿using Clothes.Store.Application.Interfaces;
+using Clothes.Store.Application.Models.InputModel;
 using FluentValidation;
 using System;
 using System.Collections.Generic;
@@ -6,12 +7,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clothes.Store.Domain.Validators.Custumer
+namespace Clothes.Store.Application.Validators.Custumer
 {
     public class AddCustumerValidator : AbstractValidator<CustumerInputModel>
     {
-        public AddCustumerValidator()
+        private readonly ICustumer _validator;
+
+        public AddCustumerValidator(ICustumer validator)
         {
+            _validator = validator;
+
             RuleFor(n => n.CustumerName)
                 .NotEmpty()
                     .WithMessage("Name must not be null")
@@ -28,7 +33,14 @@ namespace Clothes.Store.Domain.Validators.Custumer
                 .MinimumLength(10)
                     .WithMessage("Email lenght must be more than 10")
                 .Must(e => e.IsValidEmail())
-                    .WithMessage("Invalid Email! Verify the structure in your email.");
+                    .WithMessage("Invalid Email! Verify the structure in your email.")
+                .Must((model, email, context) =>
+                {
+                    var custumer = _validator.GetCustumerByEmail(email);
+
+                    return custumer == null;
+                })
+                    .WithMessage("Email is already in use");
 
             RuleFor(c => c.CPF)
                 .NotEmpty()
@@ -38,7 +50,14 @@ namespace Clothes.Store.Domain.Validators.Custumer
                 .MinimumLength(14)
                     .WithMessage("CPF lenght must be more than 14")
                 .Must(c => c.IsValidCPF())
-                    .WithMessage("Invalid CPF! Verify the structure in your CPF.");
+                    .WithMessage("Invalid CPF! Verify the structure in your CPF.")
+                .Must((model, cpf, context) =>
+                {
+                    var custumer = _validator.GetCustumerByCPF(cpf);
+
+                    return custumer == null;
+                })
+                    .WithMessage("CPF is already in use");
 
             RuleFor(p => p.Password)
                 .NotEmpty()
@@ -47,6 +66,10 @@ namespace Clothes.Store.Domain.Validators.Custumer
                     .WithMessage("Password lenght must be less than 16")
                 .MinimumLength(8)
                     .WithMessage("Password lenght must be more than 8");
+
+            RuleFor(pc => pc.ConfirmPassword)
+                .Must((model, confirmPassword) => Extensions.ComparePassword(model.Password, confirmPassword))
+                    .WithMessage("Password and Confirm Password must match");
 
             RuleFor(u => u.UserType)
                 .NotEmpty()

@@ -1,11 +1,14 @@
 ﻿using AutoMapper;
+using Clothes.Store.Application.Interfaces;
+using Clothes.Store.Application.Interfaces.Services;
 using Clothes.Store.Domain.Entities;
-using Clothes.Store.Domain.Models.InputModel;
-using Clothes.Store.Domain.Models.ViewModel;
+using Clothes.Store.Application.Models.InputModel;
+using Clothes.Store.Application.Models.ViewModel;
 using Clothes.Store.Repository;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Http.HttpResults;
 
 namespace Clothes.Store.Server.Controllers
 {
@@ -16,10 +19,22 @@ namespace Clothes.Store.Server.Controllers
         private readonly DatabaseContext _context;
         private readonly IMapper _mapper;
 
-        public CustumerController(DatabaseContext context, IMapper mapper)
+        private readonly ICustumerService _custumerService;
+        private readonly ICustumer _custumer;
+        private readonly ILogger<CustumerController> _logger;
+
+        public CustumerController(DatabaseContext context,
+                                  IMapper mapper,
+                                  ICustumerService custumerService,
+                                  ICustumer custumer,
+                                  ILogger<CustumerController> logger)
         {
             _context = context;
             _mapper = mapper;
+
+            _custumerService = custumerService;
+            _custumer = custumer;
+            _logger = logger;
         }
 
         /// <summary>
@@ -29,10 +44,11 @@ namespace Clothes.Store.Server.Controllers
         /// <response code="200">Success</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var custumers = _context.Custumer.Where(d => d.IsActivate).ToList();
-            var viewModel = _mapper.Map<List<CustumerViewModel>>(custumers);
+            //var custumers = _context.Custumer.Where(d => d.IsActivate).ToList();
+            var custumer = await _custumer.GetAll();
+            var viewModel = _mapper.Map<List<CustumerViewModel>>(custumer);
 
             return Ok(viewModel);
         }
@@ -47,39 +63,55 @@ namespace Clothes.Store.Server.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var custumer = _context.Custumer.SingleOrDefault(d => d.CustumerID == id);
-
-            if (custumer == null)
+            try
             {
-                return NotFound();
+                var custumer = await _custumer.GetById(id);
+
+                if (custumer == null)
+                {
+                    return NotFound();
+                }
+
+                var viewModel = _mapper.Map<CustumerViewModel>(custumer);
+
+                return Ok(viewModel);
             }
-
-            var viewModel = _mapper.Map<CustumerViewModel>(custumer);
-
-            return Ok(viewModel);
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while get data. (GetByIdCustumerMethod)");
+                return StatusCode(500, "Server internal error!");
+            }
         }
 
         /// <summary>
         /// Register custumer
         /// </summary>
         /// <remarks>
-        /// {"custumerName": "string", "email": "string", "cpf": "string", "password": "string", "usertype": 1}
+        /// {"custumerName": "string", "email": "string", "cpf": "string", "password": "string", confirmedPassword: "string", "usertype": 1}
         /// </remarks>
         /// <param name="input">Data of Custumer</param>
         /// <returns>Created Object</returns>
         /// <response code="201">Success</response> 
         [HttpPost]
         [ProducesResponseType(StatusCodes.Status201Created)]
-        public IActionResult Post(CustumerInputModel input)
+        public async Task<IActionResult> Post(CustumerInputModel input)
         {
             var custumer = _mapper.Map<Custumer>(input);
 
-            _context.Custumer.Add(custumer);
-            _context.SaveChanges();
+            try
+            {
+                var savedCustumer = await _custumerService.SaveCustumer(custumer);
 
-            return CreatedAtAction(nameof(GetById), new { id = custumer.CustumerID }, custumer);
+                var viewModel = _mapper.Map<CustumerViewModel>(savedCustumer);
+
+                return CreatedAtAction(nameof(GetById), new { id = viewModel.CustumerID }, viewModel);
+            } catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while recording. (PostCustumerMethod)");
+                return StatusCode(500, "Server internal error!");
+            }
         }
 
         /// <summary>
@@ -96,19 +128,20 @@ namespace Clothes.Store.Server.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Update(Guid id, CustumerInputModel input)
+        public async Task<IActionResult> Update(Guid id, UpdateCustumerInputModel input)
         {
-            var custumer = _context.Custumer.SingleOrDefault(d => d.CustumerID == id);
+            var custumer = await _custumer.GetById(id);
 
             if (custumer == null)
             {
                 return NotFound();
             }
 
-            custumer.Update(input.CustumerName, input.Email, input.CPF, input.Password, input.UserType);
+            custumer.CustumerName = input.CustumerName;
+            custumer.Email = input.Email;
+            custumer.CPF = input.CPF;
 
-            _context.Custumer.Update(custumer);
-            _context.SaveChanges();
+            await _custumer.Update(custumer);
 
             return NoContent();
         }
@@ -123,18 +156,16 @@ namespace Clothes.Store.Server.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var custumer = _context.Custumer.SingleOrDefault(d => d.CustumerID == id);
+            var custumer = await _custumer.GetById(id);
 
             if (custumer == null)
             {
                 return NotFound();
             }
 
-            custumer.Delete();
-
-            _context.SaveChanges();
+            await _custumer.Delete(custumer);
 
             return NoContent();
         }

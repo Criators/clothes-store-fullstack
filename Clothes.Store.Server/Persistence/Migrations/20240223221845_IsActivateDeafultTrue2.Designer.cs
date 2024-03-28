@@ -4,6 +4,7 @@ using Clothes.Store.Repository;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Clothes.Store.Server.Persistence.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240223221845_IsActivateDeafultTrue2")]
+    partial class IsActivateDeafultTrue2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -64,37 +67,6 @@ namespace Clothes.Store.Server.Persistence.Migrations
                     b.HasKey("CustumerID");
 
                     b.ToTable("Custumer");
-                });
-
-            modelBuilder.Entity("Clothes.Store.Domain.Entities.Log", b =>
-                {
-                    b.Property<Guid>("LogID")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("Exception")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LogDate")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("DATETIME")
-                        .HasDefaultValueSql("CURRENT_TIMESTAMP");
-
-                    b.Property<string>("LogLevel")
-                        .IsRequired()
-                        .HasMaxLength(50)
-                        .HasColumnType("varchar(50)");
-
-                    b.Property<string>("Message")
-                        .IsRequired()
-                        .HasMaxLength(100)
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("LogID");
-
-                    b.ToTable("Log");
                 });
 #pragma warning restore 612, 618
         }

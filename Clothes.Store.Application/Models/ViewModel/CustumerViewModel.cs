@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Clothes.Store.Domain.Models.ViewModel
+namespace Clothes.Store.Application.Models.ViewModel
 {
     public class CustumerViewModel
     {
@@ -16,8 +16,6 @@ namespace Clothes.Store.Domain.Models.ViewModel
         public string Email { get; set; }
 
         public string CPF { get; set; }
-
-        public string Password { get; set; }
 
         public UserType? UserType { get; set; }
     }
