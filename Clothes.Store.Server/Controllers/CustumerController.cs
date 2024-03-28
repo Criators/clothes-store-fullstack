@@ -44,10 +44,11 @@ namespace Clothes.Store.Server.Controllers
         /// <response code="200">Success</response>
         [HttpGet]
         [ProducesResponseType(StatusCodes.Status200OK)]
-        public IActionResult GetAll()
+        public async Task<IActionResult> GetAll()
         {
-            var custumers = _context.Custumer.Where(d => d.IsActivate).ToList();
-            var viewModel = _mapper.Map<List<CustumerViewModel>>(custumers);
+            //var custumers = _context.Custumer.Where(d => d.IsActivate).ToList();
+            var custumer = await _custumer.GetAll();
+            var viewModel = _mapper.Map<List<CustumerViewModel>>(custumer);
 
             return Ok(viewModel);
         }
@@ -62,20 +63,18 @@ namespace Clothes.Store.Server.Controllers
         [HttpGet("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult GetById(Guid id)
+        public async Task<IActionResult> GetById(Guid id)
         {
-            var viewModel = new CustumerViewModel();
-
             try
             {
-                var custumer = _context.Custumer.SingleOrDefault(d => d.CustumerID == id);
+                var custumer = await _custumer.GetById(id);
 
                 if (custumer == null)
                 {
                     return NotFound();
                 }
 
-                viewModel = _mapper.Map<CustumerViewModel>(custumer);
+                var viewModel = _mapper.Map<CustumerViewModel>(custumer);
 
                 return Ok(viewModel);
             }
@@ -129,19 +128,20 @@ namespace Clothes.Store.Server.Controllers
         [HttpPut("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Update(Guid id, CustumerInputModel input)
+        public async Task<IActionResult> Update(Guid id, UpdateCustumerInputModel input)
         {
-            var custumer = _context.Custumer.SingleOrDefault(d => d.CustumerID == id);
+            var custumer = await _custumer.GetById(id);
 
             if (custumer == null)
             {
                 return NotFound();
             }
 
-            custumer.Update(input.CustumerName, input.Email, input.CPF, input.Password, input.UserType);
+            custumer.CustumerName = input.CustumerName;
+            custumer.Email = input.Email;
+            custumer.CPF = input.CPF;
 
-            _context.Custumer.Update(custumer);
-            _context.SaveChanges();
+            await _custumer.Update(custumer);
 
             return NoContent();
         }
@@ -156,18 +156,16 @@ namespace Clothes.Store.Server.Controllers
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public IActionResult Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
-            var custumer = _context.Custumer.SingleOrDefault(d => d.CustumerID == id);
+            var custumer = await _custumer.GetById(id);
 
             if (custumer == null)
             {
                 return NotFound();
             }
 
-            custumer.Delete();
-
-            _context.SaveChanges();
+            await _custumer.Delete(custumer);
 
             return NoContent();
         }

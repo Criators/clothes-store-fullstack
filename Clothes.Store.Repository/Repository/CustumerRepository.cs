@@ -16,6 +16,10 @@ namespace Clothes.Store.Repository.Repository
         {
         }
 
+        public CustumerRepository(DbContext context) : base(context)
+        {
+        }
+
         public Task<Custumer> GetCustumerByEmailAsync(string email)
         {
             return (

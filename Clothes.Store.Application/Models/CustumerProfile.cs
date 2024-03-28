@@ -18,6 +18,8 @@ namespace Clothes.Store.Application.Models
 
             CreateMap<CustumerInputModel, Custumer>();
 
+            CreateMap<UpdateCustumerInputModel, Custumer>();
+
             CreateMap<AuthenticationInputModel, Custumer>();
         }
     }

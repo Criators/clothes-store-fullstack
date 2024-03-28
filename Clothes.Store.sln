@@ -21,6 +21,14 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clothes.Store.Domain", "Clo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Clothes.Store.Application", "Clothes.Store.Application\Clothes.Store.Application.csproj", "{FAFD776F-336A-4D23-812B-05FCBFDAC4FC}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Clothes.Store.Tests", "Clothes.Store.Tests\Clothes.Store.Tests.csproj", "{993245BC-E728-4687-83C9-E0599AB69D1B}"
+	ProjectSection(ProjectDependencies) = postProject
+		{69F82F7B-5980-469E-832B-7BCD71FD3506} = {69F82F7B-5980-469E-832B-7BCD71FD3506}
+		{96838EB5-4F04-48E2-8B7A-36458DAEDD77} = {96838EB5-4F04-48E2-8B7A-36458DAEDD77}
+		{D39D4D95-6189-4C9C-B3BC-BE8B3743A027} = {D39D4D95-6189-4C9C-B3BC-BE8B3743A027}
+		{FAFD776F-336A-4D23-812B-05FCBFDAC4FC} = {FAFD776F-336A-4D23-812B-05FCBFDAC4FC}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -53,6 +61,10 @@ Global
 		{FAFD776F-336A-4D23-812B-05FCBFDAC4FC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FAFD776F-336A-4D23-812B-05FCBFDAC4FC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FAFD776F-336A-4D23-812B-05FCBFDAC4FC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{993245BC-E728-4687-83C9-E0599AB69D1B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{993245BC-E728-4687-83C9-E0599AB69D1B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{993245BC-E728-4687-83C9-E0599AB69D1B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{993245BC-E728-4687-83C9-E0599AB69D1B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -5,6 +5,7 @@ using Microsoft.Win32.SafeHandles;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -33,10 +34,22 @@ namespace Clothes.Store.Repository
             await _context.SaveChangesAsync();
         }
 
+
         public async Task Delete(T entity)
         {
-            _context.Set<T>().Remove(entity);
-            await _context.SaveChangesAsync();
+            PropertyInfo prop = typeof(T).GetProperty("IsActivate");
+
+            if (prop != null && prop.PropertyType == typeof(bool))
+            {
+                prop.SetValue(entity, false);
+                _context.Entry(entity).State = EntityState.Modified;
+                await _context.SaveChangesAsync();
+            }
+            else
+            {
+
+                throw new InvalidOperationException("Entity does not have IsActive property or it's not of type boolean.");
+            }
         }
 
         public async Task<List<T>> GetAll()
@@ -48,7 +61,7 @@ namespace Clothes.Store.Repository
         {
             return await _context.Set<T>().FindAsync(id);
         }
-
+        
         public async Task Update(T entity)
         {
             _context.Set<T>().Update(entity);
